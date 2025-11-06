@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Generatore Subnet Mask</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #4e73df, #1cc88a);
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+    }
+
+    .container {
+      background-color: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(6px);
+      border-radius: 16px;
+      padding: 40px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      width: 350px;
+    }
+
+    h1 {
+      font-size: 1.8em;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 80%;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1em;
+      text-align: center;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      background-color: #1cc88a;
+      color: white;
+      font-weight: bold;
+      font-size: 1em;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #17a673;
+      transform: scale(1.05);
+    }
+
+    .output {
+      margin-top: 25px;
+      background: rgba(255,255,255,0.2);
+      padding: 15px;
+      border-radius: 10px;
+      word-wrap: break-word;
+      font-family: "Courier New", monospace;
+    }
+
+    .label {
+      font-weight: bold;
+      display: block;
+      margin-top: 10px;
+      color: #f8f9fc;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Subnet Mask Generator</h1>
+    <input type="number" id="prefix" placeholder="Inserisci prefix (es. 20)" min="0" max="32">
+    <br>
+    <button onclick="generaMask()">Genera Mask</button>
+
+    <div class="output">
+      <span class="label">Maschera Binaria:</span>
+      <div id="binario">—</div>
+
+      <span class="label">Maschera Decimale:</span>
+      <div id="decimale">—</div>
+    </div>
+  </div>
+
+  <script>
+    function generaMask() {
+      let prefix = parseInt(document.getElementById("prefix").value);
+      if (isNaN(prefix) || prefix < 0 || prefix > 32) {
+        document.getElementById("binario").textContent = "Valore non valido!";
+        document.getElementById("decimale").textContent = "Inserisci un numero tra 0 e 32.";
+        return;
+      }
+
+      let ottetti_pieni = Math.floor(prefix / 8);
+      let resto = prefix % 8;
+      let maskBin = [];
+      let maskDec = [];
+
+      for (let i = 0; i < 4; i++) {
+        if (i < ottetti_pieni) {
+          maskBin.push("11111111");
+          maskDec.push("255");
+        } else if (i === ottetti_pieni && resto > 0) {
+          let bitStr = "1".repeat(resto) + "0".repeat(8 - resto);
+          maskBin.push(bitStr);
+          maskDec.push(parseInt(bitStr, 2).toString());
+        } else {
+          maskBin.push("00000000");
+          maskDec.push("0");
+        }
+      }
+
+      document.getElementById("binario").textContent = maskBin.join(".");
+      document.getElementById("decimale").textContent = maskDec.join(".");
+    }
+  </script>
+</body>
+</html>
+
