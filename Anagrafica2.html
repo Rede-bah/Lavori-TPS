@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Anagrafica Utente</title>
+
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(135deg, #dfe9f3, #ffffff);
+      padding: 40px;
+      display: flex;
+      justify-content: center;
+    }
+
+    form {
+      background: white;
+      padding: 35px 45px;
+      border-radius: 15px;
+      width: 480px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+      transition: 0.3s;
+    }
+
+    form:hover {
+      box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 25px;
+      font-size: 26px;
+      color: #333;
+    }
+
+    .campo {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 18px;
+    }
+
+    .campo label {
+      margin-bottom: 5px;
+      font-weight: 600;
+      color: #555;
+    }
+
+    input[type="text"],
+    select {
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+      transition: 0.2s;
+      width: 100%;
+    }
+
+    input[type="text"]:focus,
+    select:focus {
+      border-color: #4a90e2;
+      box-shadow: 0 0 5px rgba(74,144,226,0.4);
+      outline: none;
+    }
+
+    .radio-group,
+    .checkbox-group,
+    .select-group {
+      margin-top: 18px;
+      margin-bottom: 15px;
+      padding: 10px 15px;
+      background: #f7f9fc;
+      border-radius: 10px;
+      border: 1px solid #e0e6ed;
+    }
+
+    .radio-group label,
+    .checkbox-group label,
+    .select-group label {
+      font-weight: 700;
+      color: #333;
+    }
+
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      background: #4a90e2;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background: #357ac8;
+    }
+
+    #risultato {
+      margin-top: 25px;
+      padding: 18px;
+      background: #f0f7ff;
+      border-left: 5px solid #4a90e2;
+      border-radius: 8px;
+      color: #333;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+<form id="anagraficaForm" autocomplete="off">
+
+  <h1>Anagrafica Utente</h1>
+
+  <div class="campo">
+    <label for="nome">Nome:</label>
+    <input type="text" id="nome" required>
+  </div>
+
+  <div class="campo">
+    <label for="cognome">Cognome:</label>
+    <input type="text" id="cognome" required>
+  </div>
+
+  <div class="campo">
+    <label for="indirizzo">Indirizzo:</label>
+    <input type="text" id="indirizzo" required>
+  </div>
+
+  <div class="campo">
+    <label for="citta">Città:</label>
+    <input type="text" id="citta" required>
+  </div>
+
+  <div class="campo">
+    <label for="cap">CAP:</label>
+    <input type="text" id="cap" pattern="[0-9]{5}" required>
+  </div>
+
+  <div class="campo">
+    <label for="dataNascita">Data di nascita:</label>
+    <input 
+      type="text" 
+      id="dataNascita" 
+      placeholder="gg/mm/aaaa" 
+      maxlength="10" 
+      required
+      autocomplete="off"
+      onpaste="return false"
+      ondrop="return false"
+      onkeydown="limitaInputData(event)"
+    >
+  </div>
+
+  <div class="radio-group">
+    <label><strong>Sesso:</strong></label><br>
+    <input type="radio" name="sesso" value="Maschio" required> Maschio<br>
+    <input type="radio" name="sesso" value="Femmina"> Femmina<br>
+    <input type="radio" name="sesso" value="Non specificare"> Non specificare
+  </div>
+
+  <div class="checkbox-group">
+    <label><strong>Mezzi di trasporto:</strong></label><br>
+    <input type="checkbox" name="mezzo" value="Bici"> Bici<br>
+    <input type="checkbox" name="mezzo" value="Auto"> Auto<br>
+    <input type="checkbox" name="mezzo" value="Moto"> Moto
+  </div>
+
+  <div class="radio-group">
+    <label><strong>Sport preferito:</strong></label><br>
+    <input type="radio" name="sport" value="Calcio" required> Calcio<br>
+    <input type="radio" name="sport" value="Basket"> Basket<br>
+    <input type="radio" name="sport" value="Rugby"> Rugby<br>
+    <input type="radio" name="sport" value="Baseball"> Baseball<br>
+    <input type="radio" name="sport" value="Atletica"> Atletica<br>
+    <input type="radio" name="sport" value="Altro"> Altro
+  </div>
+
+  <div class="select-group">
+    <label><strong>Provincia:</strong></label><br>
+    <select name="provincia" multiple style="width: 100%; height: 120px;">
+      <option value="RM">Roma</option>
+      <option value="NA">Napoli</option>
+      <option value="TO">Torino</option>
+      <option value="MI">Milano</option>
+      <option value="PV">Pavia</option>
+      <option value="VA">Varese</option>
+      <option value="CR">Cremona</option>
+      <option value="IS">Isernia</option>
+    </select>
+  </div>
+
+  <button type="button" onclick="generazione()">Genera Informazioni</button>
+
+  <div id="risultato"></div>
+
+</form>
+
+<script>
+  function limitaInputData(e) {
+    const key = e.key;
+    const consentiti = "0123456789/";
+    const input = e.target.value;
+    if (!consentiti.includes(key) && !["Backspace","Tab","ArrowLeft","ArrowRight","Delete"].includes(key)) {
+      e.preventDefault();
+    }
+    if ((input.length === 2 || input.length === 5) && key !== "Backspace" && key !== "/") {
+      e.target.value += "/";
+    }
+  }
+
+  function generazione() {
+    const nome = document.getElementById('nome').value.trim();
+    const cognome = document.getElementById('cognome').value.trim();
+    const indirizzo = document.getElementById('indirizzo').value.trim();
+    const citta = document.getElementById('citta').value.trim();
+    const cap = document.getElementById('cap').value.trim();
+    const dataInput = document.getElementById('dataNascita').value.trim();
+
+    const patternData = /^([0-2][0-9]|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d{2}$/;
+    if (!patternData.test(dataInput)) {
+      alert("Formato data non valido (gg/mm/aaaa)");
+      return;
+    }
+
+    const [giorno, mese, anno] = dataInput.split('/').map(Number);
+    const oggi = new Date();
+    let eta = oggi.getFullYear() - anno;
+    const m = oggi.getMonth() - (mese - 1);
+    if (m < 0 || (m === 0 && oggi.getDate() < giorno)) eta--;
+
+    const sesso = document.querySelector('input[name="sesso"]:checked')?.value || "N/D";
+    const mezzi = [...document.querySelectorAll('input[name="mezzo"]:checked')].map(x => x.value).join(", ") || "Nessuno";
+    const sport = document.querySelector('input[name="sport"]:checked')?.value || "Non selezionato";
+
+    let generazioneTesto = "";
+    if (anno >= 2013) generazioneTesto = "Generazione Alpha";
+    else if (anno >= 1997) generazioneTesto = "Generazione Z";
+    else if (anno >= 1981) generazioneTesto = "Millennials";
+    else if (anno >= 1965) generazioneTesto = "Generazione X";
+    else if (anno >= 1946) generazioneTesto = "Baby Boomers";
+    else generazioneTesto = "Altro";
+
+    const select = anagraficaForm.provincia;
+    const province = [...select.options].filter(o => o.selected).map(o => o.value).join(", ") || "Nessuna";
+
+    risultato.innerHTML = `
+      <strong>${nome} ${cognome}</strong><br>
+      Indirizzo: ${indirizzo}<br>
+      Città: ${citta}<br>
+      CAP: ${cap}<br>
+      Data di nascita: ${dataInput}<br>
+      Età: ${eta}<br>
+      Sesso: ${sesso}<br>
+      Sport preferito: ${sport}<br>
+      Mezzi posseduti: ${mezzi}<br>
+      Generazione: ${generazioneTesto}<br>
+      Province selezionate: ${province}
+    `;
+  }
+</script>
+
+</body>
+</html>
