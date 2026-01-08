@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8">
-<title>Calcolatrice con funzioni e memoria</title>
+<title>Calcolatrice con funzioni</title>
 
 <style>
 body {
@@ -71,12 +71,7 @@ button {
 
     <button onclick="seno()">sin</button>
     <button onclick="coseno()">cos</button>
-    <button onclick="tangente()">tan</button><br><br>
-
-    <!-- Memoria -->
-    <button onclick="memoriaAdd()">M+</button>
-    <button onclick="memoriaRead()">MR</button>
-    <button onclick="memoriaClear()">MC</button>
+    <button onclick="tangente()">tan</button>
 </div>
 
 <script>
@@ -85,9 +80,6 @@ let display = document.getElementById("display");
 /* VETTORE per numeri e operatore */
 let valori = [];
 let oper = "";
-
-/* MEMORIA */
-let memoria = 0;
 
 /* Scrive numeri */
 function numero(n) {
@@ -139,19 +131,6 @@ function coseno() {
 
 function tangente() {
     display.value = Math.tan(parseFloat(display.value));
-}
-
-/* MEMORIA */
-function memoriaAdd() {
-    memoria = parseFloat(display.value);
-}
-
-function memoriaRead() {
-    display.value = memoria;
-}
-
-function memoriaClear() {
-    memoria = 0;
 }
 
 /* PULISCI */
