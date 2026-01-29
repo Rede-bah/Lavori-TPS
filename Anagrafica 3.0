@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Elenco Oggetti in Tabella</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        input { margin: 5px; padding: 5px; }
+        table { margin-top: 20px; border-collapse: collapse; width: 60%; }
+        th, td { border: 1px solid #333; padding: 8px; text-align: left; }
+        th { background-color: #eee; }
+    </style>
+</head>
+
+<body>
+
+    <h2>Inserisci i tuoi dati</h2>
+
+    <input type="text" id="inputNome" placeholder="Nome">
+    <input type="text" id="inputCognome" placeholder="Cognome">
+    <input type="text" id="inputEta" placeholder="Età">
+    <input type="text" id="inputCitta" placeholder="Città">
+
+    <button onclick="aggiungiPersona()">Aggiungi alla lista</button>
+
+    <h2>Elenco delle persone</h2>
+    
+    <table id="tabella">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Cognome</th>
+                <th>Età</th>
+                <th>Città</th>
+            </tr>
+        </thead>
+        <tbody id="tabellaCorpo"></tbody>
+    </table>
+
+    <script>
+        const persone = [];
+
+        function aggiungiPersona() {
+            const nome = document.getElementById("inputNome").value;
+            const cognome = document.getElementById("inputCognome").value;
+            const eta = document.getElementById("inputEta").value;
+            const citta = document.getElementById("inputCitta").value;
+
+            const persona = {
+                nome: nome,
+                cognome: cognome,
+                eta: eta,
+                citta: citta
+            };
+
+            persone.push(persona);
+            aggiornaTabella();
+
+            document.getElementById("inputNome").value = "";
+            document.getElementById("inputCognome").value = "";
+            document.getElementById("inputEta").value = "";
+            document.getElementById("inputCitta").value = "";
+        }
+
+        function aggiornaTabella() {
+            const tabellaCorpo = document.getElementById("tabellaCorpo");
+            tabellaCorpo.innerHTML = "";
+
+            persone.forEach(function(persona) {
+                tabellaCorpo.innerHTML += 
+                    "<tr>" +
+                        "<td>" + persona.nome + "</td>" +
+                        "<td>" + persona.cognome + "</td>" +
+                        "<td>" + persona.eta + "</td>" +
+                        "<td>" + persona.citta + "</td>" +
+                    "</tr>";
+            });
+        }
+    </script>
+
+</body>
+</html>
