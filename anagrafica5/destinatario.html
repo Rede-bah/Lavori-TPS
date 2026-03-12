@@ -1,0 +1,40 @@
+<html>
+<head>
+    <title>Lettura parametri URL</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<h2>Dati ricevuti</h2>
+
+<table id="tabella1" border="1">
+</table>
+
+<script>
+
+    s = "";
+
+    var url = document.location.search.substring(0);
+
+    var url1 = url.split("&")[0];
+    var url2 = url.split("&")[1];
+    var url3 = url.split("&")[2];
+
+    var nome = url1.substr(9);
+    var cognome = url2.substr(11);
+    var citta = url3.substr(9);
+
+    s = s + "<td>Nome</td><td>" + nome + "</td>";
+    s = s + "</tr>";
+    s = s + "<td>Cognome</td><td>" + cognome + "</td>";
+    s = s + "</tr>";
+    s = s + "<td>Città</td><td>" + citta + "</td>";
+    s = s + "</tr>";
+
+    document.getElementById("tabella1").innerHTML = s;
+
+</script>
+
+</body>
+</html>
