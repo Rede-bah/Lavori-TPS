@@ -1,0 +1,122 @@
+body {
+    background: linear-gradient(135deg, #2c2c2c, #3b3b3b);
+    color: #f1f1f1;
+    font-family: sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    margin: 0;
+}
+
+header {
+    background: linear-gradient(90deg, #1f1f1f, #2b2b2b);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px 0;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+}
+
+.rettangolo {
+    background-color: #3a3a3a;
+    border-radius: 14px;
+    padding: 25px 35px;
+    margin: 20px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    width: 500px;
+    transition: transform 0.2s;
+}
+
+.rettangolo:hover {
+    transform: translateY(-3px);
+}
+
+h2 {
+    margin-top: 25px;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+    margin-bottom: 15px;
+    margin-top: 6px;
+    padding: 8px;
+    border-radius: 6px;
+    border: none;
+    background-color: #555;
+    color: white;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+    outline: none;
+    background-color: #666;
+}
+
+.checkbox-group {
+    text-align: left;
+    margin: 10px 0 20px 0;
+}
+
+.output {
+    background-color: #404040;
+    border-radius: 14px;
+    padding: 25px 30px;
+    margin: 20px;
+    width: 600px;
+    text-align: left;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    padding: 12px;
+    background-color: #1f1f1f;
+    font-weight: bold;
+    text-align: left;
+}
+
+td {
+    padding: 12px;
+    border-bottom: 1px solid #555;
+}
+
+tr:nth-child(even) {
+    background-color: #4a4a4a;
+}
+
+tr:hover {
+    background-color: #555;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+input[type="button"] {
+    margin: 10px 5px;
+    padding: 9px 16px;
+    border: none;
+    border-radius: 6px;
+    background: linear-gradient(135deg, #4a90e2, #357abd);
+    color: white;
+    cursor: pointer;
+    transition: 0.25s;
+}
+
+input[type="button"]:hover {
+    background: linear-gradient(135deg, #357abd, #2c5fa3);
+    transform: scale(1.05);
+}
