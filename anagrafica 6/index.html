@@ -29,18 +29,25 @@
       reader.onload = function (e) {
         const testo = e.target.result;
         output.innerHTML = "";
-        parseCSV(testo);
+        lettoreCSV(testo);
       };
       reader.readAsText(file);
     });
+	
+		function lettoreCSV(testo) {
+ 		 const righe = testo.split("\n");
+ 		 const lista = document.createElement("ul");
 
-    function parseCSV(testo) {
-      const righe = testo.split("\n");
-      for (var i = 0; i < righe.length; i++) {
-        output.innerHTML += righe[i] + "<br>";
-      }
-    }
-  </script>
+  for (let i = 0; i < righe.length; i++) {
+  	  const li = document.createElement("li");
+   	 li.textContent = righe[i];
+   	 lista.appendChild(li);
+   }
+  output.appendChild(lista);
+}
 
+    
+      
+    </script>
 </body>
 </html>
