@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Piattforma Universale</title>
+<style>
+  body { font-family: Arial, sans-serif; background:#f0f0f0; margin:0; padding:20px; }
+  h1, h2 { text-align:center; }
+  .sezione { display: none; }
+  .attiva { display: block; }
+  button { margin: 10px; padding:10px 20px; border:none; border-radius:4px; cursor:pointer; }
+  #nav { text-align:center; margin-bottom:20px; }
+  #nav button { background:#0066cc; color:#fff; margin:0 5px; }
+  .prodotti { display:flex; flex-wrap:wrap; justify-content: center; }
+  .prodotto { background:#fff; border-radius:8px; margin:10px; padding:10px; width:200px; box-shadow:0 2px 5px rgba(0,0,0,0.1); display:flex; flex-direction:column; align-items:center; }
+  .prodotto img { max-width:180px; max-height:180px; object-fit:contain; }
+  .prezzo { color:green; font-weight:bold; margin:5px 0; }
+</style>
+</head>
+<body>
+
+<h1>Piattforma Universale</h1>
+
+<div id="nav">
+  <button onclick="mostraSezione('config')">Configura CSV</button>
+  <button onclick="mostraSezione('catalogo')">Catalogo</button>
+  <button onclick="mostraSezione('dettaglio')">Dettaglio</button>
+  <button onclick="mostraSezione('carrello')">Carrello</button>
+</div>
+
+<div id="sezione-config" class="sezione">
+<h2>Configurazione CSV</h2>
+<form id="formConfig">
+  <label>Inserisci URL del file CSV (esempio: prodotti.csv):</label><br>
+  <input type="text" id="csvUrl" placeholder="prodotti.csv" style="width:80%; padding:8px;" required><br>
+  <button type="submit" style="background:#0066cc; color:#fff;">Salva</button>
+</form>
+</div>
+
+<div id="sezione-catalogo" class="sezione">
+<h2>Catalogo Prodotti</h2>
+<div class="prodotti" id="catalogo"></div>
+</div>
+
+<div id="sezione-dettaglio" class="sezione">
+<h2>Dettaglio Prodotto</h2>
+<div id="dettaglio"></div>
+</div>
+
+<div id="sezione-carrello" class="sezione">
+<h2>Carrello</h2>
+<table border="1" style="width:100%; border-collapse:collapse;">
+<tr>
+  <th>Immagine</th>
+  <th>Marca e Modello</th>
+  <th>Descrizione</th>
+  <th>Prezzo</th>
+</tr>
+</table>
+<button onclick="finalizzaAcquisto()">Completa Acquisto</button>
+</div>
+
+<script>
+  let carrello = [];
+
+  function mostraSezione(nome) {
+    document.querySelectorAll('.sezione').forEach(s => s.classList.remove('attiva'));
+    document.getElementById('sezione-' + nome).classList.add('attiva');
+    if(nome==='catalogo') caricaCatalogo();
+    if(nome==='carrello') mostraCarrello();
+  }
+
+  function caricaCatalogo() {
+    document.getElementById('catalogo').innerHTML = '';
+    const csvPath = localStorage.getItem('csvPath') || 'prodotti.csv';
+    fetch(csvPath)
+    .then(res => res.text())
+    .then(data => {
+      const righe = data.trim().split('\n');
+      for(let i=1; i<righe.length; i++) {
+        const c = righe[i].split(';');
+        const [marca, modello, descrizione, immagine, prezzo] = c;
+        const card = document.createElement('div');
+        card.className='prodotto';
+        card.innerHTML=`
+          <img src="${immagine}">
+          <h2>${marca} ${modello}</h2>
+          <p>${descrizione}</p>
+          <div class="prezzo">€ ${prezzo}</div>
+          <button onclick="apriDettaglio('${marca}','${modello}')">Dettaglio</button>
+          <button onclick="aggiungiAlCarrello('${marca}','${modello}','${descrizione}','${immagine}','${prezzo}')">Aggiungi al Carrello</button>
+        `;
+        document.getElementById('catalogo').appendChild(card);
+      }
+    });
+  }
+
+  function apriDettaglio(marca, modello) {
+    document.getElementById('dettaglio').innerHTML = '';
+    fetch('prodotti.csv')
+    .then(res => res.text())
+    .then(data => {
+      const righe = data.trim().split('\n');
+      for(let i=1; i<righe.length; i++) {
+        const c = righe[i].split(';');
+        const [m, mo, descrizione, immagine, prezzo] = c;
+        if(m===marca && mo===modello) {
+          document.getElementById('dettaglio').innerHTML=`
+            <img src="${immagine}">
+            <h3>${marca} ${modello}</h3>
+            <p>${descrizione}</p>
+            <div class="prezzo">€ ${prezzo}</div>
+            <button onclick="aggiungiAlCarrello('${marca}','${modello}','${descrizione}','${immagine}','${prezzo}')">Aggiungi al Carrello</button>
+          `;
+          mostraSezione('dettaglio');
+          break;
+        }
+      }
+    });
+  }
+
+  function aggiungiAlCarrello(marca, modello, descrizione, immagine, prezzo) {
+    carrello.push({marca, modello, descrizione, immagine, prezzo});
+    localStorage.setItem('carrello', JSON.stringify(carrello));
+    alert('Prodotto aggiunto al carrello');
+  }
+
+  function mostraCarrello() {
+    let tabella = document.querySelector('#sezione-carrello table');
+    tabella.innerHTML = `
+      <tr>
+        <th>Immagine</th>
+        <th>Marca e Modello</th>
+        <th>Descrizione</th>
+        <th>Prezzo</th>
+      </tr>`;
+    carrello = JSON.parse(localStorage.getItem('carrello')) || [];
+    for(let item of carrello){
+      const r = document.createElement('tr');
+      r.innerHTML=`
+        <td><img src="${item.immagine}" width="50"></td>
+        <td>${item.marca} ${item.modello}</td>
+        <td>${item.descrizione}</td>
+        <td>€ ${item.prezzo}</td>
+      `;
+      document.querySelector('#sezione-carrello table').appendChild(r);
+    }
+  }
+
+  function finalizzaAcquisto() {
+    alert('Acquisto completato! (funzione simulata)');
+  }
+
+  document.getElementById('formConfig').addEventListener('submit', function(e){
+    e.preventDefault();
+    const url = document.getElementById('csvUrl').value.trim();
+    localStorage.setItem('csvPath', url);
+    alert('Configurazione salvata. Vai al catalogo.');
+  });
+
+  mostraSezione('config');
+</script>
+
+</body>
+</html>
